@@ -27,8 +27,9 @@ export const useCalculator = () => {
   }, [currentNumber]);
 
   useEffect(() => {
-    // setFormula(currentNumber);
-  }, [currentNumber]);
+    const subResult = calcSubResult();
+    setPrevNumber(subResult.toString());
+  }, [formula]);
 
   const clean = () => {
     setCurrentNumber("0");
@@ -57,6 +58,8 @@ export const useCalculator = () => {
   };
 
   const setLastNumber = () => {
+    calculateResult();
+
     if (currentNumber.endsWith(".")) setPrevNumber(currentNumber.slice(0, -1));
 
     setPrevNumber(currentNumber);
@@ -81,6 +84,35 @@ export const useCalculator = () => {
   const addOperation = () => {
     setLastNumber();
     lastOperation.current = Operator.add;
+  };
+
+  const calcSubResult = () => {
+    const [firstValue, operation, secondValue] = formula.split(" ");
+    const num1 = Number(firstValue);
+    const num2 = Number(secondValue);
+
+    if (isNaN(num2)) return num1;
+
+    switch (operation) {
+      case Operator.add:
+        return num1 + num2;
+      case Operator.substract:
+        return num1 - num2;
+      case Operator.multiply:
+        return num1 * num2;
+      case Operator.divide:
+        if (num2 === 0) return "Indeterminate";
+        return num1 / num2;
+      default:
+        throw new Error(`Operation ${operation} no valid`);
+    }
+  };
+
+  const calculateResult = () => {
+    const result = calcSubResult();
+    setFormula(result.toString());
+    lastOperation.current = Operator.no;
+    setPrevNumber("0");
   };
 
   const buildNumber = (numberString: string) => {
@@ -116,5 +148,7 @@ export const useCalculator = () => {
     multOperation,
     subOperation,
     addOperation,
+    calcSubResult,
+    calculateResult,
   };
 };
