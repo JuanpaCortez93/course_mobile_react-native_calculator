@@ -6,8 +6,18 @@ import { globalStyles } from "@/styles/global.styles";
 import { View } from "react-native";
 
 const CalculatorApp = () => {
-  const { formula, buildNumber, clean, toggleSign, deleteLastNumber } =
-    useCalculator();
+  const {
+    formula,
+    prevNumber,
+    buildNumber,
+    clean,
+    toggleSign,
+    deleteLastNumber,
+    divideOperation,
+    multOperation,
+    subOperation,
+    addOperation,
+  } = useCalculator();
 
   return (
     <View style={globalStyles.calculatorContainer}>
@@ -19,12 +29,23 @@ const CalculatorApp = () => {
         >
           {formula}
         </ThemeText>
-        <ThemeText
-          style={globalStyles.subResult}
-          children="2500"
-          numberOfLines={1}
-          adjustsFontSizeToFit
-        />
+
+        {formula === prevNumber ? (
+          <ThemeText
+            children=" "
+            style={globalStyles.subResult}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          ></ThemeText>
+        ) : (
+          <ThemeText
+            style={globalStyles.subResult}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+          >
+            {prevNumber}
+          </ThemeText>
+        )}
       </View>
 
       <View style={globalStyles.row}>
@@ -42,7 +63,7 @@ const CalculatorApp = () => {
         <CalculatorButton
           label="/"
           color={Colors.orange}
-          onPress={() => buildNumber("/")}
+          onPress={() => divideOperation()}
         />
       </View>
 
@@ -65,7 +86,7 @@ const CalculatorApp = () => {
         <CalculatorButton
           label="X"
           color={Colors.orange}
-          onPress={() => buildNumber("X")}
+          onPress={() => multOperation()}
         />
       </View>
 
@@ -88,7 +109,7 @@ const CalculatorApp = () => {
         <CalculatorButton
           label="-"
           color={Colors.orange}
-          onPress={() => buildNumber("-")}
+          onPress={() => subOperation()}
         />
       </View>
 
@@ -111,7 +132,7 @@ const CalculatorApp = () => {
         <CalculatorButton
           label="+"
           color={Colors.orange}
-          onPress={() => buildNumber("+")}
+          onPress={() => addOperation()}
         />
       </View>
 

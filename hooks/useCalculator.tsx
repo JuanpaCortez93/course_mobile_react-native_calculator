@@ -16,7 +16,18 @@ export const useCalculator = () => {
   const lastOperation = useRef<Operator>(Operator.no);
 
   useEffect(() => {
-    setFormula(currentNumber);
+    if (lastOperation.current !== Operator.no) {
+      const firstFormulaPart = formula.split(" ").at(0);
+      setFormula(
+        `${firstFormulaPart} ${lastOperation.current} ${currentNumber}`,
+      );
+    } else {
+      setFormula(currentNumber);
+    }
+  }, [currentNumber]);
+
+  useEffect(() => {
+    // setFormula(currentNumber);
   }, [currentNumber]);
 
   const clean = () => {
@@ -43,6 +54,33 @@ export const useCalculator = () => {
       return setCurrentNumber("0");
 
     return setCurrentNumber(currentNumber.slice(0, currentNumber.length - 1));
+  };
+
+  const setLastNumber = () => {
+    if (currentNumber.endsWith(".")) setPrevNumber(currentNumber.slice(0, -1));
+
+    setPrevNumber(currentNumber);
+    setCurrentNumber("0");
+  };
+
+  const divideOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.divide;
+  };
+
+  const multOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.multiply;
+  };
+
+  const subOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.substract;
+  };
+
+  const addOperation = () => {
+    setLastNumber();
+    lastOperation.current = Operator.add;
   };
 
   const buildNumber = (numberString: string) => {
@@ -74,5 +112,9 @@ export const useCalculator = () => {
     clean,
     toggleSign,
     deleteLastNumber,
+    divideOperation,
+    multOperation,
+    subOperation,
+    addOperation,
   };
 };
